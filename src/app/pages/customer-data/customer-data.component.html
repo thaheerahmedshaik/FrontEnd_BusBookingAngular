@@ -13,6 +13,16 @@
         <input matInput type="number" [(ngModel)]="passenger.age" name="age{{i}}" required>
       </mat-form-field>
 
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Email</mat-label>
+          <input matInput [(ngModel)]="passenger.email" name="email{{i}}" required>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Phone</mat-label>
+          <input matInput [(ngModel)]="passenger.phone" name="phone{{i}}" required>
+        </mat-form-field>
+
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>Gender</mat-label>
         <mat-select [(ngModel)]="passenger.gender" name="gender{{i}}" required>
