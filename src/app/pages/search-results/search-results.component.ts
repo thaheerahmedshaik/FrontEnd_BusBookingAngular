@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BusService, Bus, Seat } from '../../bus.service';
+import { SeatFilterPipe } from '../seat-filter.pipe';
 
 @Component({
   selector: 'app-search-results',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule, HttpClientModule,SeatFilterPipe],
   templateUrl: './search-results.component.html',
   styleUrls: ['./search-results.component.css'],
   providers: [BusService]

@@ -76,14 +76,35 @@
         <div class="seat-layout">
           <div class="bus-representation"></div>
           <div class="seats-container">
-            <div *ngFor="let seat of seats"
-                 class="seat"
-                 [class.available]="seat.available"
-                 [class.unavailable]="!seat.available"
-                 [class.selected]="isSeatSelected(seat)"
-                 (click)="toggleSeatSelection(seat)">
-              {{seat.number}}
-            </div>
+              <!-- LOWER DECK -->
+      <h3 class="deck-title">Lower Deck</h3>
+      <div class="seats-container">
+        <div *ngFor="let seat of seats | seatFilter:'Lower'"
+             class="seat"
+             [class.available]="seat.available"
+             [class.unavailable]="!seat.available"
+             [class.selected]="isSeatSelected(seat)"
+             [class.sleeper]="seat.type === 'Sleeper'"
+             [class.seater]="seat.type === 'Seater'"
+             (click)="toggleSeatSelection(seat)">
+          {{seat.number}}
+        </div>
+      </div>
+
+      <!-- UPPER DECK -->
+      <h3 class="deck-title">Upper Deck</h3>
+      <div class="seats-container">
+        <div *ngFor="let seat of seats | seatFilter:'Upper'"
+             class="seat"
+             [class.available]="seat.available"
+             [class.unavailable]="!seat.available"
+             [class.selected]="isSeatSelected(seat)"
+             [class.sleeper]="seat.type === 'Sleeper'"
+             [class.seater]="seat.type === 'Seater'"
+             (click)="toggleSeatSelection(seat)">
+          {{seat.number}}
+        </div>
+      </div>
           </div>
 
           <!-- Seat Legend -->
@@ -97,7 +118,7 @@
               <span>Selected</span>
             </div>
             <div class="seat-info-item">
-              <div class="seat-color" style="background-color: #ffebee; border: 2px solid #f44336;"></div>
+              <div class="seat-color" style="background-color: #ebf6ff; border: 2px solid #f44336;"></div>
               <span>Booked</span>
             </div>
           </div>

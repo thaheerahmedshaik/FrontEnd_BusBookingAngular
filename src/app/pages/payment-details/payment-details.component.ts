@@ -124,7 +124,7 @@ export class PaymentDetailsComponent implements OnInit {
     console.log('Processing payment via', this.selectedPaymentMethod);
     this.busBookingService.completeBooking();
    alert("payment succesfully"+this.bookingDetails)
-    this.router.navigate(['/customer-data'], {
+    this.router.navigate(['/my-bookings'], {
       state: {
         bookingDetails: this.bookingDetails,
         paymentMethod: this.selectedPaymentMethod,

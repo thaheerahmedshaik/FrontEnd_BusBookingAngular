@@ -38,6 +38,9 @@ export interface DroppingPoint {
   providedIn: 'root'
 })
 export class BusService {
+  getSearchParams() {
+    throw new Error('Method not implemented.');
+  }
   private apiUrl = 'http://localhost:8080/buses'; // Spring Boot URL
 
   constructor(private http: HttpClient) { }

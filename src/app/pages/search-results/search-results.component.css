@@ -290,17 +290,26 @@ body {
 }
 
 .seat {
-    width: 100%;
-    aspect-ratio: 1;
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  width: 70px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 4px;
+}
+.seat.sleeper {
+  width: 70px;
+  height: 120px; /* Sleeper (vertical rectangle) */
 }
 
+.seat.seater {
+  width: 70px;
+  height: 70px; /* Seater (square) */
+}
 .seat.available {
     background-color: #e8f5e9;
     border: 2px solid #4caf50;
