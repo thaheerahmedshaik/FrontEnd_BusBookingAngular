@@ -290,7 +290,7 @@ body {
 }
 
 .seat {
-  width: 70px;
+  width: 50px;
   border-radius: 10px;
   display: flex;
   justify-content: center;

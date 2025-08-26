@@ -20,6 +20,9 @@ export interface Bus {
   seatsAvailable: number;
   fromCity?: string;       // optional, if backend provides
   toCity?: string;
+  seatType?:string;
+  rating?:string;
+  amenities?:string;
 }
 
 export interface BoardingPoint {
