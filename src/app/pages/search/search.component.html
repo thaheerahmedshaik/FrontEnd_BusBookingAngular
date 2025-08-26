@@ -1,0 +1,37 @@
+<div class="search-container">
+  <div class="search-card">
+    <h2 class="card-title">🚌 Bus Booking</h2>
+    <form [formGroup]="bookingForm" (ngSubmit)="searchBuses()" class="booking-form">
+
+      <label for="from">From</label>
+      <select id="from" formControlName="from">
+        <option value="" disabled>Select city</option>
+        <option *ngFor="let city of fromCities" 
+                [value]="city" 
+                [attr.disabled]="!isSwapping && city === bookingForm.value.to ? true : null">
+          {{ city }}
+        </option>
+      </select>
+
+      <label for="to">To</label>
+      <select id="to" formControlName="to">
+        <option value="" disabled>Select city</option>
+        <option *ngFor="let city of toCities" 
+                [value]="city" 
+                [attr.disabled]="!isSwapping && city === bookingForm.value.from ? true : null">
+          {{ city }}
+        </option>
+      </select>
+
+      <button type="button" class="swap-button" (click)="swapCities()">⇄ Swap</button>
+
+      <label for="journeyDate">Journey Date</label>
+      <input type="date" id="journeyDate" formControlName="journeyDate" [min]="minDate">
+
+      <button type="submit" [disabled]="bookingForm.invalid" class="search-button">
+        Search Buses
+      </button>
+
+    </form>
+  </div>
+</div>

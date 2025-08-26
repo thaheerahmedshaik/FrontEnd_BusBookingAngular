@@ -1,0 +1,110 @@
+<div class="payment-container">
+  <div class="booking-summary">
+    <h2>{{ bookingDetails.busName }}</h2>
+    <div class="timing">
+      <span>{{ bookingDetails.departureTime }}</span>
+      <span class="duration">{{ bookingDetails.duration }}</span>
+      <span>{{ bookingDetails.arrivalTime }}</span>
+    </div>
+    <div class="selected-seats">
+      <h3>Selected Seats</h3>
+      <ul>
+        <li *ngFor="let seat of bookingDetails.selectedSeats">• {{ seat }} - ₹{{ bookingDetails.totalAmount }}</li>
+      </ul>
+    </div>
+    
+    <div class="total-amount">
+      <h3>Total: ₹{{ bookingDetails.totalAmount }}</h3>
+    </div>
+  </div>
+
+  <div class="payment-options">
+    <h2>Select Payment Method</h2>
+    
+    <div class="payment-methods">
+      <div class="method" [class.selected]="selectedPaymentMethod === 'phonepay'" (click)="selectPaymentMethod('phonepay')">
+        <img src="assets/images/phonepay-logo.png" alt="PhonePe">
+        <span>PhonePe</span>
+      </div>
+      
+      <div class="method" [class.selected]="selectedPaymentMethod === 'googlepay'" (click)="selectPaymentMethod('googlepay')">
+        <img src="assets/images/googlepay-logo.png" alt="Google Pay">
+        <span>Google Pay</span>
+      </div>
+      
+      <div class="method" [class.selected]="selectedPaymentMethod === 'card'" (click)="selectPaymentMethod('card')">
+        <i class="fa fa-credit-card-alt" aria-hidden="true"></i>
+        <span>Credit/Debit Card</span>
+      </div>
+      
+      <div class="method" [class.selected]="selectedPaymentMethod === 'upi'" (click)="selectPaymentMethod('upi')">
+        <i class="fa fa-money" aria-hidden="true"></i>
+        <span>UPI</span>
+      </div>
+    </div>
+
+    <div class="payment-details" *ngIf="selectedPaymentMethod === 'card'">
+      <form [formGroup]="paymentForm">
+        <div class="form-group">
+          <label>Card Number</label>
+          <input type="text" formControlName="cardNumber" placeholder="1234 5678 9012 3456">
+          <div *ngIf="paymentForm.get('cardNumber')?.invalid && paymentForm.get('cardNumber')?.touched" class="error-message">
+            Please enter a valid 16-digit card number
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Card holder Name</label>
+          <input type="text" formControlName="cardName" placeholder="Name on card">
+          <div *ngIf="paymentForm.get('cardName')?.invalid && paymentForm.get('cardName')?.touched" class="error-message">
+            Cardholder name is required
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="form-group">
+            <label>Expiry Date</label>
+            <input type="text" formControlName="expiryDate" placeholder="MM/YY">
+            <div *ngIf="paymentForm.get('expiryDate')?.invalid && paymentForm.get('expiryDate')?.touched" class="error-message">
+              Please enter a valid expiry date (MM/YY)
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>CVV</label>
+            <input type="text" formControlName="cvv" placeholder="123">
+            <div *ngIf="paymentForm.get('cvv')?.invalid && paymentForm.get('cvv')?.touched" class="error-message">
+              Please enter a valid CVV (3-4 digits)
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="payment-details" *ngIf="selectedPaymentMethod === 'upi'">
+      <form [formGroup]="paymentForm">
+        <div class="form-group">
+          <label>UPI ID</label>
+          <input type="text" formControlName="upiId" placeholder="yourname@upi">
+          <div *ngIf="paymentForm.get('upiId')?.invalid && paymentForm.get('upiId')?.touched" class="error-message">
+            Please enter a valid UPI ID
+          </div>
+        </div>
+        <p class="note">You'll be redirected to your UPI app for payment</p>
+      </form>
+    </div>
+
+    <div class="payment-details" *ngIf="selectedPaymentMethod === 'phonepay' || selectedPaymentMethod === 'googlepay'">
+      <div class="qr-code">
+        <img src="assets/images/qr-code.jpg" alt="PhonePe">
+        <p>Scan this QR code with {{ selectedPaymentMethod === 'phonepay' ? 'PhonePe' : 'Google Pay' }} app</p>
+      </div>
+    </div>
+
+    <button class="pay-button" (click)="processPayment()" [disabled]="!selectedPaymentMethod || 
+      (selectedPaymentMethod === 'card' && paymentForm.invalid) ||
+      (selectedPaymentMethod === 'upi' && !paymentForm.get('upiId')?.valid)">
+      Pay ₹{{ bookingDetails.totalAmount }}
+    </button>
+  </div>
+</div>

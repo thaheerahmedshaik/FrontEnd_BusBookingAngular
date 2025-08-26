@@ -1,0 +1,29 @@
+<div class="container">
+  <h2>Passenger Information</h2>
+
+  <form #customerForm="ngForm" (ngSubmit)="proceedToPayment(customerForm)">
+    <div *ngFor="let passenger of passengers; let i = index">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Name</mat-label>
+        <input matInput [(ngModel)]="passenger.name" name="name{{i}}" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Age</mat-label>
+        <input matInput type="number" [(ngModel)]="passenger.age" name="age{{i}}" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Gender</mat-label>
+        <mat-select [(ngModel)]="passenger.gender" name="gender{{i}}" required>
+          <mat-option value="Male">Male</mat-option>
+          <mat-option value="Female">Female</mat-option>
+          <mat-option value="animals">animals</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <button mat-stroked-button type="button" (click)="addPassenger()">+ Add Passenger</button>
+    <button mat-raised-button color="primary" type="submit">Proceed to Payment</button>
+  </form>
+</div>
