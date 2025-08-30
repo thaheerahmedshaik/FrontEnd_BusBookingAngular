@@ -7,6 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -16,14 +18,20 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./customer-data.component.css'],
   imports: [
     CommonModule,
-    FormsModule,           // ✅ Required for ngModel & ngForm
+    FormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatButtonModule
+    MatButtonModule,
+    MatRadioModule,
+    MatSlideToggleModule
   ]
 })
 export class CustomerDataComponent {
+  contact = { phone: '', email: '', state: '', whatsapp: true };
+
+  states: string[] = ['Telangana', 'Karnataka', 'Maharashtra', 'Tamil Nadu', 'Kerala'];
+
   passengers: any[] = [
     { name: '', age: null, gender: '' }
   ];
@@ -36,8 +44,9 @@ export class CustomerDataComponent {
 
   proceedToPayment(form: any) {
     if (form.valid) {
+      console.log('Contact:', this.contact);
       console.log('Passenger Data:', this.passengers);
-      this.router.navigate(['/payment-details'], { state: { passengers: this.passengers } });
+      this.router.navigate(['/payment-details'], { state: { passengers: this.passengers, contact: this.contact } });
     }
   }
 }
