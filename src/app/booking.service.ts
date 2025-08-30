@@ -6,30 +6,40 @@ export interface Passenger {
   gender: string;
 }
 
-export interface BookingDetails {
+export interface Booking {
+  busId: number;
   busName: string;
   departureTime: string;
   arrivalTime: string;
   duration: string;
+  fromCity: string;
+  toCity: string;
   price: number;
-  passengers: Passenger[];
+  selectedSeats: string[];
+  totalAmount: number;
+  boardingPoint?: string;
+  droppingPoint?: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
-export class BookingService {
-  private bookingData: BookingDetails | null = null;
+@Injectable({ providedIn: 'root' })
+export class BusService {
+  private currentBooking: Booking | null = null;
 
-  setBooking(data: BookingDetails) {
-    this.bookingData = data;
+  setCurrentBooking(booking: Booking) {
+    this.currentBooking = booking;
   }
 
-  getBooking(): BookingDetails | null {
-    return this.bookingData;
+  getCurrentBooking(): Booking | null {
+    return this.currentBooking;
   }
 
   clearBooking() {
-    this.bookingData = null;
+    this.currentBooking = null;
+  }
+
+    // ✅ Add this so PaymentDetailsComponent works
+  completeBooking() {
+    console.log("Booking completed:", this.currentBooking);
+    // here you could store booking in DB or localStorage
   }
 }

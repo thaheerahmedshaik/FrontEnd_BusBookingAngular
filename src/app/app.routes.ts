@@ -5,6 +5,7 @@ import { BookTicketsComponent } from './pages/book-tickets/book-tickets.componen
 import { MyBookingsComponent } from './pages/my-bookings/my-bookings.component';
 import { PaymentDetailsComponent } from './pages/payment-details/payment-details.component';
 import { CustomerDataComponent } from './pages/customer-data/customer-data.component';
+import { LoginComponent } from './pages/login/login.component';
 
 export const routes: Routes = [
     {
@@ -35,7 +36,7 @@ export const routes: Routes = [
      {
         path:"customer-data",
         component:CustomerDataComponent
-     }
-
+     },
+{ path: 'login', component: LoginComponent }, 
 
 ];
