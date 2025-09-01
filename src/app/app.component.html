@@ -23,5 +23,12 @@
       </ul>
     </div>
   </div>
+ 
 </nav>
 <router-outlet></router-outlet>
+
+<!-- Floating Button -->
+<button class="chat-toggle" (click)="toggleChat()">💬</button>
+
+<!-- Chat Window -->
+<app-chatbot *ngIf="chatOpen"></app-chatbot>

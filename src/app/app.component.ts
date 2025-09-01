@@ -1,19 +1,26 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { RouterModule } from '@angular/router';
+import { ChatbotComponent } from './chatbot/chatbot.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  imports: [RouterModule],
+  imports: [CommonModule, RouterModule, ChatbotComponent],
 
 })
 export class AppComponent implements OnInit {
   isLoggedIn: boolean = false;
 title:any
+ chatOpen = false; 
   constructor(private router: Router) {}
+ // ✅ THIS FIXES YOUR ERROR
+  toggleChat() {
+    this.chatOpen = !this.chatOpen;
+  }
 
   ngOnInit() {
     // Check if the code is running in the browser before accessing localStorage
