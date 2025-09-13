@@ -1,6 +1,8 @@
 <div class="chat-container">
+  <!-- Header -->
   <div class="chat-header">🤖 Chatbot</div>
 
+  <!-- Messages -->
   <div class="chat-messages">
     <div
       *ngFor="let msg of messages"
@@ -10,6 +12,7 @@
     </div>
   </div>
 
+  <!-- Input Area -->
   <div class="chat-input">
     <input
       type="text"
@@ -17,6 +20,6 @@
       placeholder="Type a message..."
       (keyup.enter)="sendMessage()"
     />
-    <button (click)="sendMessage()">Send</button>
+    <button (click)="sendMessage()" title="Send message">Send</button>
   </div>
 </div>
