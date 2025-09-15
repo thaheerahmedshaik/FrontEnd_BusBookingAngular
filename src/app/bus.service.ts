@@ -41,6 +41,9 @@ export interface DroppingPoint {
   providedIn: 'root'
 })
 export class BusService {
+  sendBooking(booking: { name: any; age: any; phone: string; state: string; }) {
+    throw new Error('Method not implemented.');
+  }
   getSearchParams() {
     throw new Error('Method not implemented.');
   }

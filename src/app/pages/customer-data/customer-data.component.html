@@ -34,7 +34,8 @@
 
     <form #customerForm="ngForm" (ngSubmit)="proceedToPayment(customerForm)">
       <div *ngFor="let passenger of passengers; let i = index" class="passenger-card">
-        <h3>Passenger {{i+1}}</h3>
+       <h3>Passenger {{i+1}} (Seat {{passenger.seatNumber}})</h3>
+
 
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>Name</mat-label>
@@ -53,8 +54,12 @@
         </mat-radio-group>
       </div>
 
-      <button mat-stroked-button type="button" (click)="addPassenger()">+ Add Passenger</button>
-      <button mat-raised-button color="primary" type="submit">Proceed to Payment</button>
+      <div class="actions">
+        <button mat-stroked-button type="button" (click)="addPassenger()">+ Add Passenger</button>
+        <button mat-raised-button color="primary" type="submit">
+          Proceed to Payment
+        </button>
+      </div>
     </form>
   </div>
 </div>

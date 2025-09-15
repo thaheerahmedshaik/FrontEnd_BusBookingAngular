@@ -1,4 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 export interface Passenger {
   name: string;
@@ -19,11 +21,16 @@ export interface Booking {
   totalAmount: number;
   boardingPoint?: string;
   droppingPoint?: string;
+  passengers?: Passenger[]; 
 }
 
 @Injectable({ providedIn: 'root' })
-export class BusService {
+export class BusBookingService {
   private currentBooking: Booking | null = null;
+ private baseUrl = 'http://localhost:8080/api/whatsapp';
+
+  constructor(private http: HttpClient) {}
+
 
   setCurrentBooking(booking: Booking) {
     this.currentBooking = booking;
@@ -42,4 +49,8 @@ export class BusService {
     console.log("Booking completed:", this.currentBooking);
     // here you could store booking in DB or localStorage
   }
+sendBooking(booking: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/send`, booking); // expects JSON
+  }
+
 }
