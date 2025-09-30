@@ -1,15 +1,15 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http'; // Add this import
+import { provideHttpClient } from '@angular/common/http';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
-
+import { ReactiveFormsModule } from '@angular/forms';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(), // Add this provider
-    provideClientHydration(withEventReplay())
+    provideHttpClient(),
+    provideClientHydration(withEventReplay()),
+    importProvidersFrom(ReactiveFormsModule), // ✅ needed for FormBuilder
   ]
 };

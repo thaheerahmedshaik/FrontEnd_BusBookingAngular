@@ -1,134 +1,119 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { BusService, Booking } from '../../../bus.service'; // Ensure BusService and Booking interface are imported
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { BusService, Booking, BookingDTO, Passenger } from '../../bus.service';
 
 @Component({
   selector: 'app-payment-details',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './payment-details.component.html',
-  styleUrls: ['./payment-details.component.css'],
+  styleUrls: ['./payment-details.component.css']
 })
 export class PaymentDetailsComponent implements OnInit {
-
-  
-  paymentForm: FormGroup;
-  selectedPaymentMethod: string = '';
-  bookingDetails: Booking & { boardingPoint: string; droppingPoint: string } = {
-    busName: 'Organe Travels AC sleeper',
-    departureTime: '07:00',
-    arrivalTime: '23:00',
-    duration: '8h 30m',
-    selectedSeats: [],
-    totalAmount: 2200,
-    boardingPoint: '20:40 Majestic - Majestic bus stop back side, in Front of 6',
-    droppingPoint: '03:30 Sriperumbudur - Toll Gate',
-  };
-
-  
-  private bookingData: Booking | null = null;
-
-  setCurrentBooking(data: Booking) {
-    this.bookingData = data;
-  }
-
-  getCurrentBooking(): Booking | null {
-    return this.bookingData;
-  }
+  bookingDetails?: Booking;
+  selectedPaymentMethod: 'card' | 'upi' | 'phonepay' | 'googlepay' | null = null;
+  paymentForm: FormGroup = new FormGroup({});
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
-    private busBookingService: BusService
-  ) {
+    private busService: BusService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    // Get current booking from BusService
+    const booking = this.busService.getCurrentBooking();
+    if (!booking) {
+      alert('No booking found! Redirecting to search page.');
+      this.router.navigate(['/book-tickets']);
+      return;
+    }
+    this.bookingDetails = booking;
+    this.initForm();
+  }
+
+  private initForm(): void {
     this.paymentForm = this.fb.group({
       cardNumber: ['', [Validators.pattern(/^\d{16}$/)]],
       cardName: [''],
-      expiryDate: ['', [Validators.pattern(/^(0[1-9]|1[0-2])\/?([0-9]{2})$/)]],
+      expiryDate: ['', [Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/)]],
       cvv: ['', [Validators.pattern(/^\d{3,4}$/)]],
       upiId: ['', [Validators.pattern(/^[\w.-]+@[\w]+$/)]],
     });
   }
 
-  ngOnInit(): void {
-    const bookingData = this.busBookingService.getCurrentBooking();
-    if (bookingData) {
-      this.bookingDetails.busName = bookingData.busName;
-      this.bookingDetails.departureTime = bookingData.departureTime;
-      this.bookingDetails.arrivalTime = bookingData.arrivalTime;
-      this.bookingDetails.duration = bookingData.duration;
-      this.bookingDetails.selectedSeats = bookingData.selectedSeats;
-      this.bookingDetails.totalAmount = bookingData.totalAmount;
-    } else {
-      this.router.navigate(['/payment-details']);
-    }
-  }
-  updateBookingDetails(selectedSeats: string[], seatPrice: number, busName: string) {
-    this.bookingDetails.busName = busName;
-    this.bookingDetails.selectedSeats = selectedSeats.map(seat => ({
-      number: seat,
-      price: seatPrice
-    }));
-    this.bookingDetails.totalAmount = this.bookingDetails.selectedSeats
-      .reduce((sum, seat) => sum + seat.price, 0);
-  }
-  
-  
-  selectPaymentMethod(method: string): void {
+  selectPaymentMethod(method: 'card' | 'upi' | 'phonepay' | 'googlepay'): void {
     this.selectedPaymentMethod = method;
     this.paymentForm.reset();
 
-    // Set validators dynamically based on method
     if (method === 'card') {
       this.paymentForm.get('cardNumber')?.setValidators([Validators.required, Validators.pattern(/^\d{16}$/)]);
       this.paymentForm.get('cardName')?.setValidators([Validators.required]);
-      this.paymentForm.get('expiryDate')?.setValidators([Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/?([0-9]{2})$/)]);
+      this.paymentForm.get('expiryDate')?.setValidators([Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/)]);
       this.paymentForm.get('cvv')?.setValidators([Validators.required, Validators.pattern(/^\d{3,4}$/)]);
       this.paymentForm.get('upiId')?.clearValidators();
     } else if (method === 'upi') {
       this.paymentForm.get('upiId')?.setValidators([Validators.required, Validators.pattern(/^[\w.-]+@[\w]+$/)]);
-      this.paymentForm.get('cardNumber')?.clearValidators();
-      this.paymentForm.get('cardName')?.clearValidators();
-      this.paymentForm.get('expiryDate')?.clearValidators();
-      this.paymentForm.get('cvv')?.clearValidators();
+      ['cardNumber','cardName','expiryDate','cvv'].forEach(f => this.paymentForm.get(f)?.clearValidators());
+    } else {
+      ['cardNumber','cardName','expiryDate','cvv','upiId'].forEach(f => this.paymentForm.get(f)?.clearValidators());
     }
 
     this.paymentForm.updateValueAndValidity();
   }
 
   processPayment(): void {
-    if (this.selectedPaymentMethod === '') {
-      alert('Please select a payment method');
-      return;
-    }
+    if (!this.bookingDetails) return;
+    if (!this.selectedPaymentMethod) return alert('Please select a payment method');
 
-    if (this.selectedPaymentMethod === 'card' && (
-      this.paymentForm.get('cardNumber')?.invalid ||
-      this.paymentForm.get('cardName')?.invalid ||
-      this.paymentForm.get('expiryDate')?.invalid ||
-      this.paymentForm.get('cvv')?.invalid
-    )) {
+    // Validate card or UPI
+    if (this.selectedPaymentMethod === 'card' && this.paymentForm.invalid) {
       this.paymentForm.markAllAsTouched();
-      alert('Please fill all card details correctly');
-      return;
+      return alert('Please fill all card details correctly');
     }
-
     if (this.selectedPaymentMethod === 'upi' && this.paymentForm.get('upiId')?.invalid) {
       this.paymentForm.get('upiId')?.markAsTouched();
-      alert('Please enter a valid UPI ID');
-      return;
+      return alert('Please enter a valid UPI ID');
     }
 
-    console.log('Processing payment via', this.selectedPaymentMethod);
-    this.busBookingService.completeBooking();
-   alert("payment succesfully"+this.bookingDetails)
-    this.router.navigate(['/my-bookings'], {
-      state: {
-        bookingDetails: this.bookingDetails,
-        paymentMethod: this.selectedPaymentMethod,
+    // Prepare BookingDTO for backend
+    const dto: BookingDTO = {
+      busId: this.bookingDetails.busId,
+      seatIds: this.bookingDetails.selectedSeats?.map(s => s.number) || [],
+      passengers: this.bookingDetails.passengers?.map((p: Passenger) => ({
+        name: p.name || '',
+        age: p.age || 0,
+        phone: p.phone || this.bookingDetails?.contact?.phone || '',
+        state: p.state || this.bookingDetails?.contact?.state || '',
+        gender: p.gender || 'Male',
+        seatNumber: p.seatNumber
+      })) || [],
+      boardingPoint: this.bookingDetails.boardingPoint || '',
+      droppingPoint: this.bookingDetails.droppingPoint || ''
+    };
+
+    // Call backend API
+    this.busService.bookSeat(dto).subscribe({
+      next: () => {
+        alert('Payment successful!');
+        this.busService.clearBooking();
+        this.router.navigate(['/my-bookings']);
       },
+      error: (err) => {
+        console.error('Booking failed', err);
+        alert('Something went wrong. Please try again.');
+      }
     });
+  }
+
+  // Safe getter for seat numbers
+  get seatNumbers(): string {
+    return this.bookingDetails?.selectedSeats?.map(s => s.number).join(', ') || '';
+  }
+
+  get totalAmount(): number {
+    return this.bookingDetails?.totalAmount || 0;
   }
 }

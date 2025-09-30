@@ -4,6 +4,7 @@
     <a class="navbar-brand" routerLink="/">
       <i class="fa fa-bus me-2"></i>BusBooking
     </a>
+  
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -33,3 +34,5 @@
 <!-- Chat Window -->
 <app-chatbot *ngIf="chatOpen"></app-chatbot>
 
+<!-- Add this below your chatbot -->
+<div *ngIf="isLoggedIn" id="swagger-container" style="height: 80vh; margin-top: 20px;"></div>

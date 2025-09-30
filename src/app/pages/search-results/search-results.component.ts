@@ -3,13 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { BusService, Bus, Seat } from '../../bus.service';
+import { BusService, Bus, Seat, BusPoint } from '../../bus.service';
 import { SeatFilterPipe } from '../seat-filter.pipe';
 
 @Component({
   selector: 'app-search-results',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule,SeatFilterPipe],
+  imports: [CommonModule, FormsModule, HttpClientModule, SeatFilterPipe],
   templateUrl: './search-results.component.html',
   styleUrls: ['./search-results.component.css'],
   providers: [BusService]
@@ -26,20 +26,8 @@ export class SearchResultsComponent implements OnInit {
   showSeatSelectionModal = false;
   loading = false;
 
-  boardingPoints = [
-    { time: '20:40', name: 'Majestic' },
-    { time: '20:55', name: 'Shanthinagar' },
-    { time: '21:05', name: 'Dairy Circle' },
-    { time: '21:15', name: 'Madiwala' },
-  ];
-
-  droppingPoints = [
-    { time: '03:30', name: 'Sriperumbudur' },
-    { time: '03:45', name: 'Poonamallee' },
-    { time: '04:00', name: 'Maduravoyal' },
-    { time: '04:40', name: 'Guindy' }
-  ];
-
+  boardingPoints: BusPoint[] = [];
+  droppingPoints: BusPoint[] = [];
   selectedBoardingPoint: string | null = null;
   selectedDroppingPoint: string | null = null;
 
@@ -64,7 +52,6 @@ export class SearchResultsComponent implements OnInit {
     this.loading = true;
     this.busService.getBuses(this.from, this.to, this.date).subscribe({
       next: (data) => {
-        // Remove duplicates by bus.id
         const unique = new Map<number, Bus>();
         data.forEach(bus => unique.set(bus.id, bus));
         this.buses = Array.from(unique.values());
@@ -83,10 +70,27 @@ export class SearchResultsComponent implements OnInit {
     this.selectedSeats = [];
     this.totalPrice = 0;
     this.seats = [];
+    this.boardingPoints = [];
+    this.droppingPoints = [];
+    this.selectedBoardingPoint = null;
+    this.selectedDroppingPoint = null;
 
+    // Fetch seats
     this.busService.getSeats(bus.id).subscribe({
       next: (data) => this.seats = data,
       error: (err) => console.error('Error fetching seats:', err)
+    });
+
+    // Fetch boarding points dynamically
+    this.busService.getBoardingPoints(bus.id).subscribe({
+      next: (data) => this.boardingPoints = data,
+      error: (err) => console.error('Error fetching boarding points:', err)
+    });
+
+    // Fetch dropping points dynamically
+    this.busService.getDroppingPoints(bus.id).subscribe({
+      next: (data) => this.droppingPoints = data,
+      error: (err) => console.error('Error fetching dropping points:', err)
     });
   }
 
@@ -95,17 +99,18 @@ export class SearchResultsComponent implements OnInit {
     this.selectedSeats = [];
     this.totalPrice = 0;
     this.seats = [];
+    this.boardingPoints = [];
+    this.droppingPoints = [];
+    this.selectedBoardingPoint = null;
+    this.selectedDroppingPoint = null;
   }
 
   toggleSeatSelection(seat: Seat): void {
     if (!seat.available) return;
 
     const index = this.selectedSeats.findIndex(s => s.number === seat.number);
-    if (index === -1) {
-      this.selectedSeats.push(seat);
-    } else {
-      this.selectedSeats.splice(index, 1);
-    }
+    if (index === -1) this.selectedSeats.push(seat);
+    else this.selectedSeats.splice(index, 1);
 
     this.totalPrice = this.selectedSeats.reduce((sum, s) => sum + s.price, 0);
   }

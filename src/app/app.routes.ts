@@ -6,6 +6,7 @@ import { MyBookingsComponent } from './pages/my-bookings/my-bookings.component';
 import { PaymentDetailsComponent } from './pages/payment-details/payment-details.component';
 import { CustomerDataComponent } from './pages/customer-data/customer-data.component';
 import { LoginComponent } from './pages/login/login.component';
+import { SwaggerComponent } from './swagger/swagger.component';
 
 export const routes: Routes = [
     {
@@ -38,5 +39,6 @@ export const routes: Routes = [
         component:CustomerDataComponent
      },
 { path: 'login', component: LoginComponent }, 
+ { path: 'api-docs', component: SwaggerComponent },
 
 ];

@@ -1,65 +1,23 @@
-<div class="customer-container">
-  <!-- Contact Details -->
-  <div class="section">
-    <h2>Contact details</h2>
-    <p class="subtext">Ticket details will be sent to</p>
-
-    <mat-form-field appearance="outline" class="w-full">
-      <mat-label>Phone</mat-label>
-      <input matInput [(ngModel)]="contact.phone" name="phone" required>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="w-full">
-      <mat-label>Email ID</mat-label>
-      <input matInput type="email" [(ngModel)]="contact.email" name="email" required>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="w-full">
-      <mat-label>State of Residence</mat-label>
-      <mat-select [(ngModel)]="contact.state" name="state" required>
-        <mat-option *ngFor="let state of states" [value]="state">{{state}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <div class="whatsapp-toggle">
-      <mat-slide-toggle [(ngModel)]="contact.whatsapp" name="whatsapp">
-        Send booking details and trip updates on WhatsApp
-      </mat-slide-toggle>
+<div class="container">
+  <h2>Passenger Details</h2>
+  <form #f="ngForm" (ngSubmit)="proceedToPayment(f)">
+    <div *ngFor="let p of passengers; let i = index" class="passenger-card">
+      <h4>Seat {{ p.seatNumber }}</h4>
+      <input name="name{{i}}" [(ngModel)]="p.name" placeholder="Name" required>
+      <input name="age{{i}}" type="number" [(ngModel)]="p.age" placeholder="Age" required>
+      <select name="gender{{i}}" [(ngModel)]="p.gender">
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
     </div>
-  </div>
 
-  <!-- Passenger Details -->
-  <div class="section">
-    <h2>Passenger details</h2>
+    <h3>Contact Details</h3>
+    <input name="phone" [(ngModel)]="contact.phone" placeholder="Phone" required>
+    <input name="email" [(ngModel)]="contact.email" placeholder="Email">
+    <select name="state" [(ngModel)]="contact.state">
+      <option *ngFor="let s of states" [value]="s">{{ s }}</option>
+    </select>
 
-    <form #customerForm="ngForm" (ngSubmit)="proceedToPayment(customerForm)">
-      <div *ngFor="let passenger of passengers; let i = index" class="passenger-card">
-       <h3>Passenger {{i+1}} (Seat {{passenger.seatNumber}})</h3>
-
-
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label>Name</mat-label>
-          <input matInput [(ngModel)]="passenger.name" name="name{{i}}" required>
-          <mat-error *ngIf="!passenger.name">Please enter valid Name</mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label>Age</mat-label>
-          <input matInput type="number" [(ngModel)]="passenger.age" name="age{{i}}" required>
-        </mat-form-field>
-
-        <mat-radio-group [(ngModel)]="passenger.gender" name="gender{{i}}" class="gender-group" required>
-          <mat-radio-button value="Male">Male</mat-radio-button>
-          <mat-radio-button value="Female">Female</mat-radio-button>
-        </mat-radio-group>
-      </div>
-
-      <div class="actions">
-        <button mat-stroked-button type="button" (click)="addPassenger()">+ Add Passenger</button>
-        <button mat-raised-button color="primary" type="submit">
-          Proceed to Payment
-        </button>
-      </div>
-    </form>
-  </div>
+    <button type="submit">Proceed to Payment</button>
+  </form>
 </div>

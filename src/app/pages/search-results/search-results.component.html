@@ -4,7 +4,7 @@
       <div class="route">{{from}} → {{to}}</div>
       <div class="date">Date: {{date}}</div>
     </div>
-    <a class="change-search" >Change Search</a>
+    <a class="change-search">Change Search</a>
   </div>
 
   <!-- Loading -->
@@ -52,7 +52,7 @@
         <div class="bus-price">
           <div class="price">₹{{bus.price}}</div>
           <div class="price-text">per seat</div>
-          <div class="seats-available">{{bus.availableSeats}} seats available</div>
+          <div class="seats-available">{{bus.seatsAvailable}} seats available</div>
         </div>
         <div class="bus-actions">
           <button class="view-seats-btn" (click)="openSeatSelection(bus)">View Seats</button>
@@ -137,21 +137,21 @@
           </div>
         </div>
 
-        <!-- Boarding / Dropping -->
+        <!-- Boarding / Dropping Points -->
         <div class="points-selection">
           <div>
             <label>Boarding Point:</label>
             <select class="point-select" [(ngModel)]="selectedBoardingPoint">
-              <option *ngFor="let point of boardingPoints" [value]="point.name">
-                {{point.name}} ({{point.time}})
+              <option *ngFor="let point of boardingPoints" [ngValue]="point">
+                {{ point.name }} ({{ point.time }})
               </option>
             </select>
           </div>
           <div>
             <label>Dropping Point:</label>
             <select class="point-select" [(ngModel)]="selectedDroppingPoint">
-              <option *ngFor="let point of droppingPoints" [value]="point.name">
-                {{point.name}} ({{point.time}})
+              <option *ngFor="let point of droppingPoints" [ngValue]="point">
+                {{ point.name }} ({{ point.time }})
               </option>
             </select>
           </div>

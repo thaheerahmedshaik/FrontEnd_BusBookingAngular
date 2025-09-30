@@ -4,6 +4,11 @@ import { RouterModule, Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { ChatbotComponent } from './chatbot/chatbot.component';
 
+// If using npm package:
+// import SwaggerUI from 'swagger-ui-dist';
+// If using CDN, just declare it:
+declare const SwaggerUI: any;
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -14,7 +19,7 @@ import { ChatbotComponent } from './chatbot/chatbot.component';
 export class AppComponent implements OnInit {
   isLoggedIn = false;
   chatOpen = false;
-  title:'Ecommerce-App' | undefined;
+  title: 'Ecommerce-App' | undefined;
 
   constructor(private router: Router) {}
 
@@ -26,6 +31,16 @@ export class AppComponent implements OnInit {
     if (typeof window !== 'undefined') {
       this.isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
       if (!this.isLoggedIn) this.router.navigate(['/login']);
+
+      // Initialize Swagger UI only if user is logged in
+      if (this.isLoggedIn) {
+        SwaggerUI({
+          dom_id: '#swagger-container',
+          url: 'http://localhost:8080/v3/api-docs', // Spring Boot OpenAPI URL
+          presets: [SwaggerUI.presets.apis],
+          layout: 'BaseLayout',
+        });
+      }
     }
   }
 
