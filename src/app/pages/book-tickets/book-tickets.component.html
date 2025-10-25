@@ -1,49 +1,58 @@
 <div class="bus-container">
-  <h2>Available Buses</h2>
+  <h2>Available Buses</h2>
 
-  <!-- No buses -->
-  <div *ngIf="buses.length === 0" class="no-buses">
-    No buses found for your search.
-  </div>
+    <div *ngIf="buses.length === 0" class="no-buses">
+    No buses found for your search.
+  </div>
 
-  <!-- Bus list -->
-  <div *ngFor="let bus of buses; trackBy: trackByBusId" class="bus-card">
-    <h3>{{ bus.busName }}</h3>
-    <p>{{ bus.fromCity }} → {{ bus.toCity }}</p>
-    <p>🕑 {{ bus.departureTime }} - {{ bus.arrivalTime }} ({{ bus.duration }})</p>
-    <p>💰 Price: ₹{{ bus.price }}</p>
-    <button (click)="openSeatSelection(bus)">Select Seats</button>
-  </div>
+    <div *ngFor="let bus of buses; trackBy: trackByBusId" class="bus-card">
+    <h3>{{ bus.busName }}</h3>
+    <p>{{ bus.fromCity }} → {{ bus.toCity }}</p>
+    <p>🕑 {{ bus.departureTime }} - {{ bus.arrivalTime }} ({{ bus.duration }})</p>
+    <p>💰 Price: ₹{{ bus.price }}</p>
+    <button (click)="openSeatSelection(bus)">Select Seats</button>
+  </div>
 
-  <!-- Seat selection -->
-  <div *ngIf="showSeatSelection && selectedBus" class="seat-section">
-    <h3>Choose Seats for {{ selectedBus.busName }}</h3>
+    <div *ngIf="showSeatSelection && selectedBus" class="seat-section">
+    <h3>Choose Seats for {{ selectedBus.busName }}</h3>
 
-    <!-- Seat grid -->
-    <div class="seats">
-      <div *ngFor="let seat of seats; trackBy: trackBySeatId"
-           (click)="toggleSeat(seat)"
-           [class.selected]="selectedSeats.includes(seat)"
-           [class.unavailable]="!seat.available">
-        {{ seat.number }}
-      </div>
-    </div>
+        <div class="seats">
+      <div *ngFor="let seat of seats; trackBy: trackBySeatId"
+           (click)="toggleSeat(seat)"
+           [class.selected]="selectedSeats.includes(seat)"
+           [class.unavailable]="!seat.available">
+        {{ seat.number }}
+      </div>
+    </div>
 
-    <!-- Passenger form -->
-    <div class="passenger-form" *ngIf="selectedSeats.length > 0">
-      <h4>Passenger Details</h4>
-      <form [formGroup]="passengerForm">
-        <div formArrayName="passengers" *ngFor="let p of passengers.controls; let i = index">
-          <div [formGroupName]="i" class="passenger-card">
-            <p>Seat: {{ selectedSeats[i]?.number }}</p>
-            <input formControlName="name" placeholder="Name" />
-            <input formControlName="age" type="number" placeholder="Age" />
-            <input formControlName="phone" placeholder="Phone" />
-            <input formControlName="state" placeholder="State" />
-          </div>
-        </div>
-      </form>
-      <button class="btn-confirm" (click)="confirmBooking()">Confirm Booking</button>
-    </div>
-  </div>
+        <div class="point-selection" *ngIf="selectedSeats.length > 0">
+      <h4>Select Points</h4>
+      
+      <div class="select-group">
+        <label for="boarding">Boarding Point:</label>
+                <select id="boarding" [(ngModel)]="selectedBoarding" name="selectedBoarding">
+          <option *ngFor="let point of boardingPoints" [ngValue]="point">
+            {{ point.pointName }} ({{ point.time }})
+          </option>
+        </select>
+      </div>
+      
+      <div class="select-group">
+        <label for="dropping">Dropping Point:</label>
+        <select id="dropping" [(ngModel)]="selectedDropping" name="selectedDropping">
+          <option *ngFor="let point of droppingPoints" [ngValue]="point">
+            {{ point.pointName }} ({{ point.time }})
+          </option>
+        </select>
+      </div>
+    </div>
+
+        <div class="booking-summary" *ngIf="selectedSeats.length > 0">
+            <h4>Total Price: ₹{{ totalPrice }}</h4>
+      
+      <button class="btn-confirm" (click)="proceedToCustomerData()">
+        Proceed to Customer Details ({{ selectedSeats.length }} Seat{{ selectedSeats.length > 1 ? 's' : '' }})
+      </button>
+    </div>
+  </div>
 </div>

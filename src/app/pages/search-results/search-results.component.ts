@@ -28,8 +28,10 @@ export class SearchResultsComponent implements OnInit {
 
   boardingPoints: BusPoint[] = [];
   droppingPoints: BusPoint[] = [];
-  selectedBoardingPoint: string | null = null;
-  selectedDroppingPoint: string | null = null;
+  
+  // Correct typing: objects, not strings
+  selectedBoardingPoint: BusPoint | null = null;
+  selectedDroppingPoint: BusPoint | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -81,15 +83,21 @@ export class SearchResultsComponent implements OnInit {
       error: (err) => console.error('Error fetching seats:', err)
     });
 
-    // Fetch boarding points dynamically
+    // Fetch boarding points
     this.busService.getBoardingPoints(bus.id).subscribe({
-      next: (data) => this.boardingPoints = data,
+      next: (data) => {
+        this.boardingPoints = data;
+        if (data.length > 0) this.selectedBoardingPoint = data[0];
+      },
       error: (err) => console.error('Error fetching boarding points:', err)
     });
 
-    // Fetch dropping points dynamically
+    // Fetch dropping points
     this.busService.getDroppingPoints(bus.id).subscribe({
-      next: (data) => this.droppingPoints = data,
+      next: (data) => {
+        this.droppingPoints = data;
+        if (data.length > 0) this.selectedDroppingPoint = data[0];
+      },
       error: (err) => console.error('Error fetching dropping points:', err)
     });
   }
@@ -124,19 +132,34 @@ export class SearchResultsComponent implements OnInit {
   }
 
   proceedToPayment(): void {
-    if (!this.selectedBus || this.selectedSeats.length === 0) return;
+    // Validate selections
+    if (!this.selectedBus || this.selectedSeats.length === 0) {
+        alert('Please select a bus and at least one seat.');
+        return;
+    }
 
+    if (!this.selectedBoardingPoint || !this.selectedDroppingPoint) {
+        alert('Please select both boarding and dropping points.');
+        return;
+    }
+
+    // Use the objects directly
     const bookingData = {
-      bus: this.selectedBus,
+      busId: this.selectedBus.id,
+      busName: this.selectedBus.name,
+      fromCity: this.from,
+      toCity: this.to,
+      travelDate: this.date,
       selectedSeats: this.selectedSeats,
       totalAmount: this.totalPrice,
-      from: this.from,
-      to: this.to,
-      date: this.date,
-      boardingPoint: this.selectedBoardingPoint,
-      droppingPoint: this.selectedDroppingPoint
+
+      boardingPoint: `${this.selectedBoardingPoint.name} (${this.selectedBoardingPoint.time})`,
+      droppingPoint: `${this.selectedDroppingPoint.name} (${this.selectedDroppingPoint.time})`,
+      boardingPointId: this.selectedBoardingPoint.id,
+      droppingPointId: this.selectedDroppingPoint.id
     };
 
+    localStorage.setItem('currentBooking', JSON.stringify(bookingData));
     this.router.navigate(['/customer-data'], { state: { bookingData } });
   }
 }
