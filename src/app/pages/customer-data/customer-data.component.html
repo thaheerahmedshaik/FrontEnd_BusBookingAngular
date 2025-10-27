@@ -1,23 +1,109 @@
-<div class="container">
-  <h2>Passenger Details</h2>
+<div class="customer-container">
+  <h2>🧍 Passenger & Contact Details</h2>
+
   <form #f="ngForm" (ngSubmit)="proceedToPayment(f)">
-    <div *ngFor="let p of passengers; let i = index" class="passenger-card">
-      <h4>Seat {{ p.seatNumber }}</h4>
-      <input name="name{{i}}" [(ngModel)]="p.name" placeholder="Name" required>
-      <input name="age{{i}}" type="number" [(ngModel)]="p.age" placeholder="Age" required>
-      <select name="gender{{i}}" [(ngModel)]="p.gender">
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
-      </select>
+    <div class="section passenger-section">
+      <h3>Passenger Information</h3>
+
+      <div *ngFor="let p of passengers; let i = index" class="passenger-card">
+        <div class="card-header">
+          <h4>Seat {{ p.seatNumber }}</h4>
+        </div>
+
+        <div class="card-body">
+          <div class="form-group">
+            <label for="name{{ i }}">Name</label>
+            <input
+              id="name{{ i }}"
+              name="name{{ i }}"
+              [(ngModel)]="p.name"
+              placeholder="Enter full name"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="age{{ i }}">Age</label>
+            <input
+              id="age{{ i }}"
+              name="age{{ i }}"
+              type="number"
+              min="1"
+              max="100"
+              [(ngModel)]="p.age"
+              placeholder="Age"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="gender{{ i }}">Gender</label>
+            <select
+              id="gender{{ i }}"
+              name="gender{{ i }}"
+              [(ngModel)]="p.gender"
+              required
+            >
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <h3>Contact Details</h3>
-    <input name="phone" [(ngModel)]="contact.phone" placeholder="Phone" required>
-    <input name="email" [(ngModel)]="contact.email" placeholder="Email">
-    <select name="state" [(ngModel)]="contact.state">
-      <option *ngFor="let s of states" [value]="s">{{ s }}</option>
-    </select>
+    <div class="section contact-section">
+      <h3>Contact Information</h3>
 
-    <button type="submit">Proceed to Payment</button>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input
+          name="phone"
+          [(ngModel)]="contact.phone"
+          placeholder="Enter phone number"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input
+          name="email"
+          type="email"
+          [(ngModel)]="contact.email"
+          placeholder="Enter email address"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>State</label>
+        <select name="state" [(ngModel)]="contact.state" required>
+          <option value="">Select State</option>
+          <option *ngFor="let s of states" [value]="s">{{ s }}</option>
+        </select>
+      </div>
+
+      <div class="form-group checkbox">
+        <input
+          id="whatsapp"
+          type="checkbox"
+          [(ngModel)]="contact.whatsapp"
+          name="whatsapp"
+        />
+        <label for="whatsapp">Receive booking updates on WhatsApp</label>
+      </div>
+    </div>
+
+    <div class="summary">
+      <p>
+        <strong>Total Seats:</strong> {{ passengers.length }} |
+        <strong>Total Fare:</strong> ₹{{ totalFare }}
+      </p>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="btn-primary">Proceed to Payment</button>
+    </div>
   </form>
 </div>

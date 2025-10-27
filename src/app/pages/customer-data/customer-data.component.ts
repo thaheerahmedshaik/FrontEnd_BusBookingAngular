@@ -9,7 +9,7 @@ import { Booking, BusBookingService, Passenger } from '../../booking.service';
   standalone: true,
   templateUrl: './customer-data.component.html',
   styleUrls: ['./customer-data.component.css'],
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule],
 })
 export class CustomerDataComponent implements OnInit {
   bookingData!: Booking;
@@ -21,27 +21,56 @@ export class CustomerDataComponent implements OnInit {
 
   ngOnInit(): void {
     const nav = this.router.getCurrentNavigation();
-    if (nav?.extras.state && nav.extras.state['bookingData']) {
+
+    if (nav?.extras.state?.['bookingData']) {
+      // If booking data was passed via router state
       this.bookingData = nav.extras.state['bookingData'];
-      this.passengers = this.bookingData.selectedSeats.map(seat => ({
-        name: '', age: 0, gender: 'Male', seatNumber: seat.number
-      }));
+      this.busService.setCurrentBooking(this.bookingData);
     } else {
-      alert('No booking found! Redirecting.');
-      this.router.navigate(['/book-tickets']);
+      // If the user refreshed the page, retrieve from localStorage
+      const savedBooking = this.busService.getCurrentBooking();
+      if (savedBooking) {
+        this.bookingData = savedBooking;
+      } else {
+        alert('No booking found! Redirecting.');
+        this.router.navigate(['/book-tickets']);
+        return;
+      }
     }
+
+    // Create passenger placeholders for selected seats
+    this.passengers = this.bookingData.selectedSeats.map((seat) => ({
+      name: '',
+      age: 0,
+      gender: 'Male',
+      seatNumber: seat.number,
+    }));
   }
 
-  addPassenger() { this.passengers.push({ name: '', age: 0, gender: 'Male', seatNumber: '' }); }
+  get totalFare(): number {
+    if (!this.bookingData?.selectedSeats) return 0;
+    return this.bookingData.selectedSeats.reduce(
+      (sum, s) => sum + (s.price || 0),
+      0
+    );
+  }
 
   proceedToPayment(form: NgForm) {
-    if (form.invalid) { alert('Fill all passenger details'); return; }
+    if (!this.bookingData) {
+      alert('Booking data missing.');
+      return;
+    }
+
+    if (form.invalid) {
+      alert('Please fill all passenger details before proceeding.');
+      return;
+    }
 
     const finalBooking: Booking = {
       ...this.bookingData,
       passengers: this.passengers,
       contact: this.contact,
-      totalAmount: this.bookingData.selectedSeats.reduce((sum, s) => sum + (s.price || 0), 0)
+      totalAmount: this.totalFare,
     };
 
     this.busService.setCurrentBooking(finalBooking);
