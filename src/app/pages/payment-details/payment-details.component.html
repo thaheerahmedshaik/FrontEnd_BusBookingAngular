@@ -1,43 +1,49 @@
-<div *ngIf="bookingDetails">
-  <h2>Payment for {{ bookingDetails?.busName }}</h2>
-  <p>From: {{ bookingDetails?.fromCity }} → To: {{ bookingDetails?.toCity }}</p>
-  <p>Departure: {{ bookingDetails?.departureTime }} | Arrival: {{ bookingDetails?.arrivalTime }}</p>
-  <p>Seats: {{ seatNumbers }}</p>
-  <p>Total Amount: ₹{{ bookingDetails?.totalAmount }}</p>
-
-  <h3>Select Payment Method</h3>
-  <button type="button" (click)="selectPaymentMethod('card')">Card</button>
-  <button type="button" (click)="selectPaymentMethod('upi')">UPI</button>
-  <button type="button" (click)="selectPaymentMethod('phonepay')">PhonePay</button>
-  <button type="button" (click)="selectPaymentMethod('googlepay')">GooglePay</button>
-
-  <!-- Only render form when paymentForm is ready -->
-  <form *ngIf="paymentForm" [formGroup]="paymentForm" (ngSubmit)="processPayment()">
-
-    <!-- Card Payment Fields -->
-    <div *ngIf="selectedPaymentMethod === 'card'" class="payment-card">
-      <input formControlName="cardNumber" placeholder="Card Number" />
-      <input formControlName="cardName" placeholder="Card Holder Name" />
-      <input formControlName="expiryDate" placeholder="MM/YY" />
-      <input formControlName="cvv" placeholder="CVV" />
+<div *ngIf="bookingDetails" class="payment-container">
+  <div class="payment-card">
+    <h2>Payment for <span>{{ bookingDetails?.busName }}</span></h2>
+    <div class="trip-info">
+      <p><strong>From:</strong> {{ bookingDetails?.fromCity }} → <strong>To:</strong> {{ bookingDetails?.toCity }}</p>
+      <p><strong>Departure:</strong> {{ bookingDetails?.departureTime }} | <strong>Arrival:</strong> {{ bookingDetails?.arrivalTime }}</p>
+      <p><strong>Seats:</strong> {{ seatNumbers }}</p>
+      <p class="amount"><strong>Total:</strong> ₹{{ bookingDetails?.totalAmount }}</p>
     </div>
 
-    <!-- UPI Payment Field -->
-    <div *ngIf="selectedPaymentMethod === 'upi'" class="payment-upi">
-      <input formControlName="upiId" placeholder="UPI ID" />
+    <h3>Select Payment Method</h3>
+    <div class="method-buttons">
+      <button type="button" (click)="selectPaymentMethod('card')" [class.active]="selectedPaymentMethod === 'card'">💳 Card</button>
+      <button type="button" (click)="selectPaymentMethod('upi')" [class.active]="selectedPaymentMethod === 'upi'">📱 UPI</button>
+      <button type="button" (click)="selectPaymentMethod('phonepay')" [class.active]="selectedPaymentMethod === 'phonepay'">🏦 PhonePe</button>
+      <button type="button" (click)="selectPaymentMethod('googlepay')" [class.active]="selectedPaymentMethod === 'googlepay'">💰 Google Pay</button>
     </div>
 
-    <!-- For phonepay / googlepay, you could add custom instructions -->
-    <div *ngIf="selectedPaymentMethod === 'phonepay'">
-      <p>Please open PhonePe and complete the payment of ₹{{ bookingDetails?.totalAmount }}</p>
-    </div>
+    <!-- Payment Form -->
+    <form *ngIf="paymentForm" [formGroup]="paymentForm" (ngSubmit)="processPayment()" class="form-section">
 
-    <div *ngIf="selectedPaymentMethod === 'googlepay'">
-      <p>Please open Google Pay and complete the payment of ₹{{ bookingDetails?.totalAmount }}</p>
-    </div>
+      <!-- Card Payment -->
+      <div *ngIf="selectedPaymentMethod === 'card'" class="input-group">
+        <input formControlName="cardNumber" placeholder="Card Number (16 digits)" />
+        <input formControlName="cardName" placeholder="Card Holder Name" />
+        <input formControlName="expiryDate" placeholder="MM/YY" />
+        <input formControlName="cvv" placeholder="CVV" />
+      </div>
 
-    <button type="submit" [disabled]="!selectedPaymentMethod">
-      Pay ₹{{ bookingDetails?.totalAmount }}
-    </button>
-  </form>
+      <!-- UPI Payment -->
+      <div *ngIf="selectedPaymentMethod === 'upi'" class="input-group">
+        <input formControlName="upiId" placeholder="Enter UPI ID (e.g. name@upi)" />
+      </div>
+
+      <!-- Wallet Instructions -->
+      <div *ngIf="selectedPaymentMethod === 'phonepay'" class="wallet-note">
+        <p>Open <strong>PhonePe</strong> and complete your payment of ₹{{ bookingDetails?.totalAmount }}.</p>
+      </div>
+
+      <div *ngIf="selectedPaymentMethod === 'googlepay'" class="wallet-note">
+        <p>Open <strong>Google Pay</strong> and complete your payment of ₹{{ bookingDetails?.totalAmount }}.</p>
+      </div>
+
+      <button type="submit" class="pay-btn" [disabled]="!selectedPaymentMethod">
+        Pay ₹{{ bookingDetails?.totalAmount }}
+      </button>
+    </form>
+  </div>
 </div>
