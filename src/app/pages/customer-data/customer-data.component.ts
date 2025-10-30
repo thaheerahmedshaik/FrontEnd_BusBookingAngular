@@ -38,13 +38,15 @@ export class CustomerDataComponent implements OnInit {
       }
     }
 
-    // Create passenger placeholders for selected seats
-    this.passengers = this.bookingData.selectedSeats.map((seat) => ({
-      name: '',
-      age: 0,
-      gender: 'Male',
-      seatNumber: seat.number,
-    }));
+   // ✅ New
+this.passengers = this.bookingData.selectedSeats.map((seat) => ({
+  name: '',
+  age: 0,
+  gender: 'Male',
+  seatNumber: seat.number,
+  phone: '',
+  state: '',
+}));
   }
 
   get totalFare(): number {

@@ -61,7 +61,9 @@ export interface Booking {
   fromCity: string;
   toCity: string;
   price: number;
-  selectedSeats: { number: string; price: number }[];
+ // selectedSeats: { number: string; price: number }[];
+  selectedSeats: { id: number; number: string; price: number }[];
+
   totalAmount: number;
   boardingPoint?: string;
   droppingPoint?: string;
@@ -142,10 +144,24 @@ export class BusService {
     localStorage.removeItem('currentBooking');
   }
 
-  /** Book seats using BookingDTO */
-  bookSeat(dto: BookingDTO): Observable<any> {
-    return this.http.post(`${this.apiUrl}/bookSeat`, dto);
-  }
+  // /** Book seats using BookingDTO */
+  // bookSeat(dto: BookingDTO): Observable<any> {
+  //   return this.http.post(`${this.apiUrl}/bookSeat`, dto);
+  // }
+
+
+   bookSeat(booking: Booking): Observable<any> {
+  const dto = {
+    busId: booking.busId,
+     seatIds: booking.selectedSeats.map((s) => s.id),
+    passengers: booking.passengers,
+    boardingPoint: booking.boardingPoint,
+    droppingPoint: booking.droppingPoint,
+  };
+  return this.http.post(`${this.apiUrl}/bookSeat`, dto);
+}
+
+  
   getBoardingPoints(busId: number): Observable<BusPoint[]> {
   return this.http.get<BusPoint[]>(`${this.apiUrl}/${busId}/boarding`);
 }

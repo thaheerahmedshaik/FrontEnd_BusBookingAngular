@@ -94,11 +94,10 @@ export class PaymentDetailsComponent implements OnInit {
       droppingPoint: this.bookingDetails.droppingPoint || ''
     };
 
-    // Call backend API
-    this.busService.bookSeat(dto).subscribe({
+    this.busService.bookSeat(this.bookingDetails).subscribe({
       next: () => {
-        alert('Payment successful!');
-        this.busService.clearBooking();
+        alert('Payment successful! Your booking is confirmed.');
+       // this.busService.clearBooking();
         this.router.navigate(['/my-bookings']);
       },
       error: (err) => {
