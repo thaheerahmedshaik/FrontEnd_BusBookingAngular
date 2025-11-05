@@ -1,1 +1,61 @@
-<p>my-bookings works!</p>
+<div class="ticket-container" *ngIf="bookingData">
+  <div class="ticket fade-in">
+    <h2 class="title">🚌 Booking Summary</h2>
+
+    <!-- Bus Details -->
+    <div class="section">
+      <h3>Bus Details</h3>
+      <div class="details-grid">
+        <p><strong>Bus:</strong> {{ bookingData.busName }}</p>
+        <p><strong>From:</strong> {{ bookingData.fromCity }}</p>
+        <p><strong>To:</strong> {{ bookingData.toCity }}</p>
+        <p><strong>Departure:</strong> {{ bookingData.departureTime }}</p>
+        <p><strong>Arrival:</strong> {{ bookingData.arrivalTime }}</p>
+        <p><strong>Duration:</strong> {{ bookingData.duration }}</p>
+      </div>
+    </div>
+
+    <!-- Passenger Details -->
+    <div class="section" *ngIf="bookingData.passengers?.length">
+      <h3>Passenger Details</h3>
+      <table class="passenger-table">
+        <thead>
+          <tr>
+            <th>Seat No.</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>State</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of bookingData.passengers">
+            <td>{{ p.seatNumber }}</td>
+            <td>{{ p.name }}</td>
+            <td>{{ p.age }}</td>
+            <td>{{ p.gender }}</td>
+            <td>{{ p.state }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Contact Details -->
+    <div class="section">
+      <h3>Contact Details</h3>
+      <div class="contact-info">
+        <p><strong>Phone:</strong> {{ bookingData.contact?.phone }}</p>
+        <p><strong>Email:</strong> {{ bookingData.contact?.email }}</p>
+        <p><strong>Boarding:</strong> {{ bookingData.boardingPoint }} ({{ bookingData.boardingTime }})</p>
+        <p><strong>Dropping:</strong> {{ bookingData.droppingPoint }} ({{ bookingData.droppingTime }})</p>
+      </div>
+    </div>
+
+    <!-- Fare -->
+    <div class="total-section">
+      <p><strong>Total Fare:</strong> ₹{{ bookingData.totalAmount }}</p>
+    </div>
+
+    <button class="confirm-btn" (click)="confirmBooking()">✅ Confirm & Download Ticket</button>
+  </div>
+</div>

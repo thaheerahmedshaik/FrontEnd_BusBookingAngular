@@ -1,0 +1,147 @@
+.ticket-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #bbdefb, #e3f2fd);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.ticket {
+  background: #fff;
+  width: 100%;
+  max-width: 850px;
+  border-radius: 16px;
+  padding: 35px 40px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.ticket::before,
+.ticket::after {
+  content: '';
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  background: #bbdefb;
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.ticket::before { left: -12px; }
+.ticket::after { right: -12px; }
+
+.title {
+  text-align: center;
+  color: #1565c0;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 25px;
+}
+
+.section {
+  margin-bottom: 25px;
+}
+
+.section h3 {
+  font-size: 20px;
+  color: #0d47a1;
+  border-left: 5px solid #1565c0;
+  padding-left: 10px;
+  margin-bottom: 15px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px;
+  background: #f9fafb;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+.details-grid p {
+  margin: 0;
+  color: #333;
+  font-size: 15px;
+}
+
+.passenger-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #f9fafb;
+}
+
+.passenger-table th {
+  background: #1565c0;
+  color: #fff;
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 15px;
+}
+
+.passenger-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #e0e0e0;
+  color: #333;
+}
+
+.passenger-table tr:hover {
+  background: #e3f2fd;
+  transition: 0.2s;
+}
+
+.contact-info p {
+  margin: 5px 0;
+  font-size: 15px;
+  color: #333;
+}
+
+.total-section {
+  text-align: right;
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+.confirm-btn {
+  display: block;
+  margin: 25px auto 0;
+  padding: 12px 25px;
+  background: #1565c0;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.confirm-btn:hover {
+  background: #0d47a1;
+  transform: scale(1.03);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .ticket {
+    padding: 20px;
+  }
+  .title {
+    font-size: 22px;
+  }
+  .section h3 {
+    font-size: 18px;
+  }
+}

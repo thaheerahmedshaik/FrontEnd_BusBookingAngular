@@ -170,4 +170,10 @@ getDroppingPoints(busId: number): Observable<BusPoint[]> {
   return this.http.get<BusPoint[]>(`${this.apiUrl}/${busId}/dropping`);
 }
 
+confirmBooking(bookingData: Booking): Observable<Blob> {
+  return this.http.post(`${this.apiUrl}/confirm`, bookingData, {
+    responseType: 'blob'
+  });
+}
+
 }
