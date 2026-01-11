@@ -17,7 +17,17 @@ export class SearchComponent {
   toCities: string[] = [];
   minDate: string = new Date().toISOString().split('T')[0];
   isSwapping = false;
+  loggedIn=true;
+  
 
+
+  login(){
+    this.loggedIn=true;
+  }
+  logout(){
+    this.loggedIn=false;
+  }
+ 
   private apiUrl = 'http://localhost:8080/buses';
 
   constructor(private fb: FormBuilder, private router: Router, private http: HttpClient) {

@@ -1,0 +1,17 @@
+<div class="container">
+  <h2>Face Capture</h2>
+
+  <div class="camera-box">
+    <video #video autoplay playsinline></video>
+  </div>
+
+  <button (click)="capture()">Capture</button>
+
+  <div *ngIf="capturedImage" class="preview-box">
+    <h3>Preview</h3>
+    <img [src]="capturedImage" alt="Captured Image" />
+
+    <button (click)="upload()">Upload for Verification</button>
+  </div>
+</div>
+

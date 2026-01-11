@@ -7,6 +7,7 @@ import { PaymentDetailsComponent } from './pages/payment-details/payment-details
 import { CustomerDataComponent } from './pages/customer-data/customer-data.component';
 import { LoginComponent } from './pages/login/login.component';
 import { SwaggerComponent } from './swagger/swagger.component';
+import { FaceCaptureComponent } from './face-capture-component/face-capture-component.component';
 
 export const routes: Routes = [
     {
@@ -18,6 +19,15 @@ export const routes: Routes = [
         path:"search",
         component:SearchComponent
     },
+    {
+    path: 'face-capture',
+    component: FaceCaptureComponent
+  },
+  {
+    path: '',
+    redirectTo: 'face-capture',
+    pathMatch: 'full'
+  },
     {
         path:"search-results",
         component:SearchResultsComponent
