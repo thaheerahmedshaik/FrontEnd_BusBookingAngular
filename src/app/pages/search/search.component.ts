@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { Offer } from '../../bus.service';
 
 @Component({
   selector: 'app-search',
@@ -15,11 +16,42 @@ export class SearchComponent {
   bookingForm: FormGroup;
   fromCities: string[] = [];
   toCities: string[] = [];
+  offers: Offer[] = [];
   minDate: string = new Date().toISOString().split('T')[0];
   isSwapping = false;
   loggedIn=true;
   
 
+   ngOnInit(): void {
+    this.loadFromCities();
+    this.loadToCities();
+    this.loadOffers(); // ✅ CALL OFFERS
+  }
+
+  // ---------- OFFERS ----------
+  loadOffers() {
+    this.http.get<Offer[]>(`${this.apiUrl}/offers`).subscribe({
+      next: data => {
+        this.offers = data;
+        console.log('Offers loaded:', data);
+      },
+      error: err => console.error('Error loading offers', err)
+    });
+  }
+trackByOfferId(index: number, offer: any): number {
+  return offer.id;
+}
+
+// COPY COUPON FUNCTION
+copyCoupon(code: string) {
+  navigator.clipboard.writeText(code)
+    .then(() => {
+      alert(`Coupon "${code}" copied to clipboard!`);
+    })
+    .catch(err => {
+      console.error('Failed to copy coupon:', err);
+    });
+}
 
   login(){
     this.loggedIn=true;

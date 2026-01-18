@@ -1,22 +1,22 @@
-/* Container */
+/* ================= PAGE WRAPPER ================= */
 .search-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column; /* Stack search card and offers vertically */
   align-items: center;
-  padding: 40px;
+  padding: 40px 20px;
   background: linear-gradient(135deg, #fdfbfb, #ebedee);
-  min-height: 100vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Card */
+/* ================= SEARCH CARD ================= */
 .search-card {
   background: #fff;
   padding: 30px 25px;
   border-radius: 15px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
   width: 100%;
   max-width: 450px;
+  margin-bottom: 40px; /* space for offers */
   transition: transform 0.2s ease;
 }
 
@@ -24,7 +24,7 @@
   transform: translateY(-5px);
 }
 
-/* Title */
+/* ================= TITLE ================= */
 .card-title {
   text-align: center;
   color: #d32f2f;
@@ -32,7 +32,7 @@
   margin-bottom: 25px;
 }
 
-/* Form */
+/* ================= FORM ================= */
 .booking-form {
   display: flex;
   flex-direction: column;
@@ -59,7 +59,7 @@
   border-color: #d32f2f;
 }
 
-/* Swap button */
+/* ================= SWAP BUTTON ================= */
 .swap-button {
   align-self: center;
   padding: 8px 14px;
@@ -76,7 +76,7 @@
   transform: rotate(180deg);
 }
 
-/* Search button */
+/* ================= SEARCH BUTTON ================= */
 .search-button {
   background: #d32f2f;
   color: #fff;
@@ -86,7 +86,6 @@
   font-weight: 600;
   font-size: 16px;
   cursor: pointer;
-  transition: background 0.3s ease;
 }
 
 .search-button:disabled {
@@ -98,10 +97,106 @@
   background: #b71c1c;
 }
 
-/* Responsive */
+/* ================= OFFERS SECTION ================= */
+.offers-section {
+  width: 85%;
+  max-width: 1100px;
+  margin-bottom: 40px;
+}
+
+.offers-section h3 {
+  font-size: 22px;
+  margin-bottom: 16px;
+}
+
+/* ================= OFFER CARDS ================= */
+.offer-cards {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.offer-card {
+  min-width: 280px;
+  padding: 18px;
+  border-radius: 14px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
+}
+
+.offer-card:hover {
+  transform: translateY(-4px);
+}
+
+/* ================= BADGE ================= */
+.badge {
+  background: #000;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+/* ================= FOOTER ================= */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+  font-size: 13px;
+}
+
+/* ================= COUPON CONTAINER ================= */
+.coupon-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.coupon {
+  border: 1px dashed #000;
+  padding: 4px 8px;
+  font-weight: bold;
+}
+
+/* ================= COPY BUTTON ================= */
+.copy-btn {
+  padding: 3px 8px;
+  font-size: 12px;
+  border: none;
+  border-radius: 6px;
+  background: #1976d2;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.copy-btn:hover {
+  background: #115293;
+}
+
+/* ================= VALIDITY ================= */
+.valid {
+  font-size: 12px;
+  color: #333;
+}
+
+/* ================= RESPONSIVE ================= */
 @media (max-width: 600px) {
   .search-card {
     width: 95%;
     padding: 20px;
+  }
+
+  .offers-section {
+    width: 95%;
+  }
+
+  .offer-card {
+    min-width: 220px;
+    padding: 14px;
   }
 }

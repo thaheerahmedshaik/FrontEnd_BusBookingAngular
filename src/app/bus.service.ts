@@ -91,6 +91,18 @@ export interface DroppingPoint {
   time: string;
 }
 
+//----Offer ---------------//
+export interface Offer {
+  id: number;
+  title: string;
+  description: string;
+  couponCode: string;
+  discountAmount: number;
+  validTill: string;
+  bgColor: string;
+}
+
+
 // ---------------- Service ----------------
 
 @Injectable({
@@ -169,6 +181,10 @@ export class BusService {
 getDroppingPoints(busId: number): Observable<BusPoint[]> {
   return this.http.get<BusPoint[]>(`${this.apiUrl}/${busId}/dropping`);
 }
+
+  getBusOffers(): Observable<Offer[]> {
+     return this.http.get<Offer[]>(`${this.apiUrl}/offers`);
+  }
 
 confirmBooking(bookingData: Booking): Observable<Blob> {
   return this.http.post(`${this.apiUrl}/confirm`, bookingData, {

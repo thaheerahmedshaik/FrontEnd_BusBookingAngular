@@ -1,38 +1,86 @@
-
 <div class="search-container">
   <div class="search-card">
     <h2 class="card-title">🚌 Bus Booking</h2>
-    <form [formGroup]="bookingForm" (ngSubmit)="searchBuses()" class="booking-form">
 
+    <form
+      [formGroup]="bookingForm"
+      (ngSubmit)="searchBuses()"
+      class="booking-form">
+
+      <!-- FROM -->
       <label for="from">From</label>
       <select id="from" formControlName="from">
-        <option value="" disabled>Select city</option>
-        <option *ngFor="let city of fromCities" 
-                [value]="city" 
-                [attr.disabled]="!isSwapping && city === bookingForm.value.to ? true : null">
+        <option value="" disabled selected>Select city</option>
+        <option
+          *ngFor="let city of fromCities"
+          [value]="city"
+          [disabled]="!isSwapping && city === bookingForm.get('to')?.value">
           {{ city }}
         </option>
       </select>
 
+      <!-- TO -->
       <label for="to">To</label>
       <select id="to" formControlName="to">
-        <option value="" disabled>Select city</option>
-        <option *ngFor="let city of toCities" 
-                [value]="city" 
-                [attr.disabled]="!isSwapping && city === bookingForm.value.from ? true : null">
+        <option value="" disabled selected>Select city</option>
+        <option
+          *ngFor="let city of toCities"
+          [value]="city"
+          [disabled]="!isSwapping && city === bookingForm.get('from')?.value">
           {{ city }}
         </option>
       </select>
 
-      <button type="button" class="swap-button" (click)="swapCities()">⇄ Swap</button>
+      <!-- SWAP -->
+      <button
+        type="button"
+        class="swap-button"
+        (click)="swapCities()">
+        ⇄ Swap
+      </button>
 
+      <!-- DATE -->
       <label for="journeyDate">Journey Date</label>
-      <input type="date" id="journeyDate" formControlName="journeyDate" [min]="minDate">
+      <input
+        type="date"
+        id="journeyDate"
+        formControlName="journeyDate"
+        [min]="minDate">
 
-      <button type="submit" [disabled]="bookingForm.invalid" class="search-button">
+      <!-- SEARCH -->
+      <button
+        type="submit"
+        class="search-button"
+        [disabled]="bookingForm.invalid">
         Search Buses
       </button>
 
     </form>
+  </div>
+</div>
+
+<!-- OFFERS SECTION -->
+<div class="offers-section" *ngIf="offers && offers.length">
+  <h3>Offers for you</h3>
+
+  <div class="offer-cards">
+    <div
+      class="offer-card"
+      *ngFor="let offer of offers; trackBy: trackByOfferId"
+      [ngStyle]="{ background: offer.bgColor }">
+
+      <span class="badge">Bus</span>
+
+      <h4>{{ offer.title }}</h4>
+      <p>{{ offer.description }}</p>
+
+      <div class="footer">
+        <div class="coupon-container">
+          <span class="coupon">{{ offer.couponCode }}</span>
+          <button class="copy-btn" (click)="copyCoupon(offer.couponCode)">Copy</button>
+        </div>
+        <span class="valid">Valid till {{ offer.validTill }}</span>
+      </div>
+    </div>
   </div>
 </div>
