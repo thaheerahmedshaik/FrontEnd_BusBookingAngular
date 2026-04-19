@@ -1,167 +1,223 @@
 <div class="container">
+
+  <!-- SEARCH INFO -->
   <div class="search-info">
     <div>
-      <div class="route">{{from}} → {{to}}</div>
-      <div class="date">Date: {{date}}</div>
+      <div class="route">{{ from }} → {{ to }}</div>
+      <div class="date">Date: {{ date }}</div>
     </div>
     <a class="change-search">Change Search</a>
   </div>
 
-  <!-- Loading -->
-  <div *ngIf="loading" class="loading">
-    <i class="fas fa-spinner fa-spin"></i>
-    <p>Loading buses...</p>
-  </div>
+  <!-- MAIN LAYOUT -->
+  <div class="main-layout">
 
-  <!-- No buses -->
-  <div *ngIf="!loading && buses.length === 0" class="no-buses">
-    <i class="fas fa-exclamation-circle"></i>
-    <p>No buses found for {{from}} → {{to}}.</p>
-  </div>
+    <!-- 🔥 FILTER PANEL -->
+    <div class="filter-panel">
 
-  <!-- Buses List -->
-  <div *ngIf="!loading && buses.length > 0" class="buses-list">
-    <div *ngFor="let bus of buses" class="bus-card">
-      <div class="bus-header">
-        <div class="bus-name">{{bus.busName}}</div>
-        <div class="bus-timings">
-          <span>{{bus.departureTime}}</span>
-          <i class="fas fa-arrow-right"></i>
-          <span>{{bus.arrivalTime}}</span>
-        </div>
+      <h3>Filters</h3>
+
+      <!-- Seat Type -->
+      <label>Seat Type</label>
+      <select [(ngModel)]="seatTypeFilter" (change)="applyFilters()">
+        <option value="">All</option>
+        <option value="Sleeper">Sleeper</option>
+        <option value="Seater">Seater</option>
+      </select>
+
+      <!-- Price -->
+      <label>Min Price</label>
+      <input type="number" [(ngModel)]="minPrice" />
+
+      <label>Max Price</label>
+      <input type="number" [(ngModel)]="maxPrice" />
+
+      <!-- Rating -->
+      <label>Rating</label>
+      <select [(ngModel)]="minRating" (change)="applyFilters()">
+        <option value="">All</option>
+        <option [ngValue]="4">4+ ⭐</option>
+        <option [ngValue]="3">3+ ⭐</option>
+      </select>
+
+      <!-- Amenities -->
+      <label>Amenities</label>
+      <select multiple [(ngModel)]="amenities" (change)="applyFilters()">
+        <option value="WiFi">WiFi</option>
+        <option value="AC">AC</option>
+        <option value="Charging">Charging</option>
+      </select>
+
+      <!-- Apply Button (prevents API spam) -->
+      <button class="apply-btn" (click)="applyFilters()">
+        Apply Filters
+      </button>
+
+    </div>
+
+    <!-- CONTENT AREA -->
+    <div class="content-area">
+
+      <!-- Loading -->
+      <div *ngIf="loading" class="loading">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Loading buses...</p>
       </div>
-      <div class="bus-details">
-        <div class="bus-info">
-          <div class="info-item">
-            <i class="fas fa-road"></i>
-            <span>Duration: {{bus.duration}}</span>
+
+      <!-- No buses -->
+      <div *ngIf="!loading && buses.length === 0" class="no-buses">
+        <i class="fas fa-exclamation-circle"></i>
+        <p>No buses found for {{ from }} → {{ to }}.</p>
+      </div>
+
+      <!-- BUS LIST -->
+      <div *ngIf="!loading && buses.length > 0" class="buses-list">
+
+        <div *ngFor="let bus of buses" class="bus-card">
+
+          <div class="bus-header">
+            <div class="bus-name">{{ bus.busName }}</div>
+
+            <div class="bus-timings">
+              <span>{{ bus.departureTime | date:'shortTime' }}</span>
+              <i class="fas fa-arrow-right"></i>
+              <span>{{ bus.arrivalTime | date:'shortTime' }}</span>
+            </div>
           </div>
-          <div class="info-item">
-            <i class="fas fa-chair"></i>
-            <span>Seat Type: {{bus.seatType}}</span>
-          </div>
-          <div class="info-item">
-            <i class="fas fa-star"></i>
-            <span>Rating: <strong>{{bus.rating}}/5</strong> ({{bus.reviews}} Reviews)</span>
-          </div>
-          <div class="info-item">
-            <i class="fas fa-bolt"></i>
-            <span>Amenities: {{bus.amenities}}</span>
-          </div>
-        </div>
-        <div class="bus-price">
-          <div class="price">₹{{bus.price}}</div>
-          <div class="price-text">per seat</div>
-          <div class="seats-available">{{bus.seatsAvailable}} seats available</div>
-        </div>
-        <div class="bus-actions">
-          <button class="view-seats-btn" (click)="openSeatSelection(bus)">View Seats</button>
-          <div class="rating">
-            <i class="fas fa-star"></i>
-            <span>{{bus.rating}}/5</span>
+
+          <div class="bus-details">
+
+            <div class="bus-info">
+
+              <div class="info-item">
+                <i class="fas fa-road"></i>
+                <span>Duration: {{ bus.duration }}</span>
+              </div>
+
+              <div class="info-item">
+                <i class="fas fa-chair"></i>
+                <span>Seat Type: {{ bus.seatType }}</span>
+              </div>
+
+              <div class="info-item">
+                <i class="fas fa-star"></i>
+                <span>Rating: <strong>{{ bus.rating }}/5</strong></span>
+              </div>
+
+              <div class="info-item">
+                <i class="fas fa-bolt"></i>
+                <span>
+                  Amenities:
+                  {{ bus.amenities?.length ? bus.amenities.join(', ') : 'None' }}
+                </span>
+              </div>
+
+            </div>
+
+            <div class="bus-price">
+              <div class="price">₹{{ bus.price }}</div>
+              <div class="price-text">per seat</div>
+            </div>
+
+            <div class="bus-actions">
+              <button class="view-seats-btn" (click)="openSeatSelection(bus)">
+                View Seats
+              </button>
+            </div>
+
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Seat Selection Modal -->
+  <!-- SEAT SELECTION MODAL -->
   <div *ngIf="showSeatSelectionModal" class="modal-overlay">
+
     <div class="modal-content">
+
       <div class="modal-header">
-        <div class="modal-title">Select Seats - {{ selectedBus?.busName }}</div>
-        <button class="close-modal" (click)="closeSeatSelection()">&times;</button>
+        <div class="modal-title">
+          Select Seats - {{ selectedBus?.busName }}
+        </div>
+        <button class="close-modal" (click)="closeSeatSelection()">
+          &times;
+        </button>
       </div>
 
       <div class="modal-body">
+
         <div class="seat-layout">
+
           <div class="bus-representation"></div>
 
           <div class="seats-container">
-            <!-- Lower Deck -->
+
             <h3 class="deck-title">Lower Deck</h3>
             <div class="deck-layout">
-              <div
-                *ngFor="let seat of seats | seatFilter:'Lower'"
-                class="seat"
-                [ngClass]="[
-                  seat.type.toLowerCase(),
-                  seat.available ? 'available' : 'unavailable',
-                  isSeatSelected(seat) ? 'selected' : ''
-                ]"
-                (click)="toggleSeatSelection(seat)"
-              >
+              <div *ngFor="let seat of seats | seatFilter:'Lower'"
+                   class="seat"
+                   [ngClass]="[
+                     seat.type.toLowerCase(),
+                     seat.available ? 'available' : 'unavailable',
+                     isSeatSelected(seat) ? 'selected' : ''
+                   ]"
+                   (click)="toggleSeatSelection(seat)">
                 {{ seat.number }}
               </div>
             </div>
 
-            <!-- Upper Deck -->
             <h3 class="deck-title">Upper Deck</h3>
             <div class="deck-layout">
-              <div
-                *ngFor="let seat of seats | seatFilter:'Upper'"
-                class="seat"
-                [ngClass]="[
-                  seat.type.toLowerCase(),
-                  seat.available ? 'available' : 'unavailable',
-                  isSeatSelected(seat) ? 'selected' : ''
-                ]"
-                (click)="toggleSeatSelection(seat)"
-              >
+              <div *ngFor="let seat of seats | seatFilter:'Upper'"
+                   class="seat"
+                   [ngClass]="[
+                     seat.type.toLowerCase(),
+                     seat.available ? 'available' : 'unavailable',
+                     isSeatSelected(seat) ? 'selected' : ''
+                   ]"
+                   (click)="toggleSeatSelection(seat)">
                 {{ seat.number }}
               </div>
             </div>
-          </div>
 
-          <!-- Seat Legend -->
-          <div class="seat-info">
-            <div class="seat-info-item">
-              <div class="seat-color available"></div>
-              <span>Available</span>
-            </div>
-            <div class="seat-info-item">
-              <div class="seat-color selected"></div>
-              <span>Selected</span>
-            </div>
-            <div class="seat-info-item">
-              <div class="seat-color booked"></div>
-              <span>Booked</span>
-            </div>
           </div>
         </div>
 
-        <!-- Selected Seats -->
-        <div class="selected-seats">
-          <div class="selected-seats-title">
-            Selected Seats: <span>{{ getSelectedSeatsList() }}</span>
-          </div>
-        </div>
-
-        <!-- Boarding / Dropping Points -->
+        <!-- POINTS -->
         <div class="points-selection">
+
           <div>
             <label>Boarding Point:</label>
-            <select class="point-select" [(ngModel)]="selectedBoardingPoint">
+            <select [(ngModel)]="selectedBoardingPoint">
               <option *ngFor="let point of boardingPoints" [ngValue]="point">
                 {{ point.name }} ({{ point.time }})
               </option>
             </select>
           </div>
+
           <div>
             <label>Dropping Point:</label>
-            <select class="point-select" [(ngModel)]="selectedDroppingPoint">
+            <select [(ngModel)]="selectedDroppingPoint">
               <option *ngFor="let point of droppingPoints" [ngValue]="point">
                 {{ point.name }} ({{ point.time }})
               </option>
             </select>
           </div>
+
         </div>
+
       </div>
 
       <div class="modal-footer">
-        <div class="total-price">Total: ₹{{totalPrice}}</div>
-        <button class="proceed-btn" (click)="proceedToPayment()">Proceed to Book</button>
+        <div class="total-price">Total: ₹{{ totalPrice }}</div>
+        <button class="proceed-btn" (click)="proceedToPayment()">
+          Proceed to Book
+        </button>
       </div>
+
     </div>
+
   </div>
+
 </div>

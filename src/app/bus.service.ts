@@ -38,10 +38,13 @@ export interface BookingDTO {
 }
 
 export interface Bus {
+  
   id: number;
   name: string;
-  departureTime: string;
-  arrivalTime: string;
+   busName: string;
+   durationMinutes: string; 
+  departureTime: Date;
+  arrivalTime: Date;
   duration: string;
   price: number;
   seatsAvailable: number;
@@ -50,6 +53,7 @@ export interface Bus {
   seatType?: string;
   rating?: string;
   amenities?: string;
+  amenity?:string;
 }
 
 export interface Booking {
@@ -118,10 +122,20 @@ export class BusService {
   constructor(private http: HttpClient) {}
 
   /** Get list of buses */
-  getBuses(from: string, to: string, date: string): Observable<Bus[]> {
-    const params = new HttpParams().set('from', from).set('to', to).set('date', date);
-    return this.http.get<Bus[]>(`${this.apiUrl}/search`, { params });
+getBuses(from: string, to: string, date?: string): Observable<Bus[]> {
+  let params = new HttpParams().set('from', from).set('to', to);
+  if (date && date.trim() !== '') {
+    params = params.set('date', date); // must be yyyy-MM-dd
   }
+
+  // 🔍 Debug log
+  console.log(`${this.apiUrl}/search?${params.toString()}`);
+  // Example: http://localhost:8080/buses/search?from=Hyderabad&to=Bangalore&date=2026-03-28
+
+  return this.http.get<Bus[]>(`${this.apiUrl}/search`, { params });
+}
+
+
 
   /** Get seats */
   getSeats(busId: number): Observable<Seat[]> {
@@ -165,7 +179,7 @@ export class BusService {
    bookSeat(booking: Booking): Observable<any> {
   const dto = {
     busId: booking.busId,
-     seatIds: booking.selectedSeats.map((s) => s.id),
+   seatCodes: booking.selectedSeats.map((s) => s.number),
     passengers: booking.passengers,
     boardingPoint: booking.boardingPoint,
     droppingPoint: booking.droppingPoint,
@@ -185,6 +199,13 @@ getDroppingPoints(busId: number): Observable<BusPoint[]> {
   getBusOffers(): Observable<Offer[]> {
      return this.http.get<Offer[]>(`${this.apiUrl}/offers`);
   }
+
+  filterBuses(params: any) {
+  return this.http.get<Bus[]>(
+    'http://localhost:8080/buses/filter',
+    { params }
+  );
+}
 
 confirmBooking(bookingData: Booking): Observable<Blob> {
   return this.http.post(`${this.apiUrl}/confirm`, bookingData, {
