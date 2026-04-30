@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist/out-tsc/server",
+    "outDir": "./out-tsc/server",
     "types": ["node"],
     "target": "ES2022",
     "module": "ES2022",
@@ -9,7 +9,8 @@
     "allowSyntheticDefaultImports": true
   },
   "files": [
-    "src/main.server.ts"
+    "src/main.server.ts",
+    "src/server.ts"
   ],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
