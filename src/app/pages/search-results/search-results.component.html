@@ -46,6 +46,21 @@
         <option value="WiFi">WiFi</option>
         <option value="AC">AC</option>
         <option value="Charging">Charging</option>
+        <option value="TV">TV</option>
+        <option value="Food">Food</option>
+        <option value="Blankets">Blankets</option>
+        <option value="Pillows">Pillows</option>
+        <option value="Restroom">Restroom</option>
+        <option value="Music">Music</option>
+        <option value="Reading Lights">Reading Lights</option>
+        <option value="Curtains">Curtains</option>
+        <option value="Extra Legroom">Extra Legroom</option>
+        <option value="Reclining Seats">Reclining Seats</option>
+        <option value="Onboard Staff">Onboard Staff</option>
+        <option value="Luggage Storage">Luggage Storage</option>
+        <option value="Entertainment System">Entertainment System</option>
+        <option value="Water Bottles">Water Bottles</option>
+        <option value="Blanket">Blanket</option>
       </select>
 
       <!-- Apply Button (prevents API spam) -->
@@ -153,36 +168,47 @@
 
           <div class="seats-container">
 
-            <h3 class="deck-title">Lower Deck</h3>
-            <div class="deck-layout">
-              <div *ngFor="let seat of seats | seatFilter:'Lower'"
-                   class="seat"
-                   [ngClass]="[
-                     seat.type.toLowerCase(),
-                     seat.available ? 'available' : 'unavailable',
-                     isSeatSelected(seat) ? 'selected' : ''
-                   ]"
-                   (click)="toggleSeatSelection(seat)">
-                {{ seat.number }}
-              </div>
-            </div>
+  <!-- Lower Deck -->
+  <h3 class="deck-title">Lower Deck</h3>
+  <div class="deck-layout">
+    <div *ngFor="let seat of seats | seatFilter:'Lower'"
+         class="seat"
+         [attr.data-info]="'₹' + seat.price + ' | ' + seat.type"
+         [ngClass]="[
+           seat.type?.toLowerCase(),
+           seat.available ? 'available' : 'unavailable',
+           isSeatSelected(seat) ? 'selected' : ''
+         ]"
+         (click)="toggleSeatSelection(seat)">
+      {{ seat.number }}
+    </div>
+  </div>
 
-            <h3 class="deck-title">Upper Deck</h3>
-            <div class="deck-layout">
-              <div *ngFor="let seat of seats | seatFilter:'Upper'"
-                   class="seat"
-                   [ngClass]="[
-                     seat.type.toLowerCase(),
-                     seat.available ? 'available' : 'unavailable',
-                     isSeatSelected(seat) ? 'selected' : ''
-                   ]"
-                   (click)="toggleSeatSelection(seat)">
-                {{ seat.number }}
-              </div>
-            </div>
+  <!-- Upper Deck -->
+  <h3 class="deck-title">Upper Deck</h3>
+  <div class="deck-layout">
+    <div *ngFor="let seat of seats | seatFilter:'Upper'"
+         class="seat"
+         [attr.data-info]="'₹' + seat.price + ' | ' + seat.type"
+         [ngClass]="[
+           seat.type?.toLowerCase(),
+           seat.available ? 'available' : 'unavailable',
+           isSeatSelected(seat) ? 'selected' : ''
+         ]"
+         (click)="toggleSeatSelection(seat)">
+      {{ seat.number }}
+    </div>
+  </div>
 
-          </div>
-        </div>
+  <!-- Legend -->
+  <div class="seat-info">
+    <div class="seat-info-item"><div class="seat-color available"></div> Available</div>
+    <div class="seat-info-item"><div class="seat-color selected"></div> Selected</div>
+    <div class="seat-info-item"><div class="seat-color booked"></div> Booked</div>
+  </div>
+
+</div>
+
 
         <!-- POINTS -->
         <div class="points-selection">
