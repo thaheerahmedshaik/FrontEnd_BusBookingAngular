@@ -9,6 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { environment } from '../../../environments/environment.prod';
 
 @Component({
   selector: 'app-login',
@@ -42,7 +43,7 @@ export class LoginComponent {
 
   // On Login button click
   onLogin() {
-    this.http.post('http://localhost:8080/api/auth/login', this.loginForm.value)
+    this.http.post(`${environment.apiUrl}/api/auth/login`, this.loginForm.value)
       .subscribe({
         next: (res: any) => {
           console.log('Response:', res);  // Log the response to confirm its structure
