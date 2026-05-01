@@ -25,12 +25,12 @@ jobs:
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           ###### Repository/Build Configurations ######
-          app_location: "Ecommerce-App"        # Angular project folder
-          api_location: ""                     # No API project
-          output_location: "dist/ecommerce-app" # Angular build output folder
+          app_location: "."                   # Angular project is at repo root
+          api_location: ""                    # No API project
+          output_location: "dist/ecommerce-app" # Matches angular.json outputPath
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
