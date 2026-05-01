@@ -1,15 +1,13 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Router } from '@angular/router';  // Import Router
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-
-// Angular Material
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { environment } from '../../../environments/environment.prod';
+import { environment } from '../../../environments/environment'; // ✅ use generic environment
 
 @Component({
   selector: 'app-login',
@@ -27,13 +25,13 @@ import { environment } from '../../../environments/environment.prod';
   ]
 })
 export class LoginComponent {
-  isLoggedIn: boolean = false;  // Flag to track login state
+  isLoggedIn = false;
   loginForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private router: Router  // Inject Router
+    private router: Router
   ) {
     this.loginForm = this.fb.group({
       username: [''],
@@ -41,14 +39,12 @@ export class LoginComponent {
     });
   }
 
-  // On Login button click
   onLogin() {
     this.http.post(`${environment.apiUrl}/api/auth/login`, this.loginForm.value)
       .subscribe({
         next: (res: any) => {
-          console.log('Response:', res);  // Log the response to confirm its structure
+          console.log('Response:', res);
           alert('Login Successful!');
-          // After successful login, set the login state and navigate to search
           this.isLoggedIn = true;
           localStorage.setItem('isLoggedIn', 'true');
           this.router.navigate(['/search']);
@@ -60,15 +56,12 @@ export class LoginComponent {
       });
   }
 
-  // On Logout button click
   onLogout() {
-    // Handle logout (clear state and navigate back to the login page)
     this.isLoggedIn = false;
     localStorage.removeItem('isLoggedIn');
     this.router.navigate(['/login']);
   }
 
-  // On initialization, check login state (can be done using localStorage or sessionStorage)
   ngOnInit() {
     this.isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
   }
